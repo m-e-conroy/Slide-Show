@@ -19,8 +19,11 @@ export default {
     };
   },
   async mounted() {
-    this.$el.style.height = `${window.screen.height - 50}px`;
-    this.$el.style.width = `${window.screen.width - 50}px`;
+    let W = (window.innerWidth || document.body.clientWidth) - 50;
+    let H = (window.innerHeight || document.body.clientHeight) - 50;
+
+    this.$el.style.height = `${H}px`;
+    this.$el.style.width = `${W}px`;
     await Images.getDB();
   },
   components: {
@@ -57,16 +60,6 @@ export default {
   left: 25px;
   /* border: 2px solid #fff; */
   overflow: hidden;
-}
-
-#show::after {
-  box-shadow: inset 0px 0px 30px -10px rgba(0, 0, 0, 0.75);
-  content: '';
-  display: block;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  width: 100%;
 }
 
 #show img {
