@@ -9,7 +9,79 @@ export default {
   name: "img-swap",
   props: {
     src: String,
-    transitions: []
+    transitions: Array
+  },
+  data: function() {
+    return {
+      shadow: null,
+      enterAnimations: [
+        "bounceIn",
+        "bounceInDown",
+        "bounceInUp",
+        "bounceInLeft",
+        "bounceInRight",
+        "fadeIn",
+        "fadeInDown",
+        "fadeInDownBig",
+        "fadeInLeft",
+        "fadeInLeftBig",
+        "fadeInRight",
+        "fadeInRightBig",
+        "fadeInUp",
+        "fadeInUpBig",
+        "flipInX",
+        "flipInY",
+        "lightSpeedIn",
+        "rotateIn",
+        "rotateInDownLeft",
+        "rotateInDownRight",
+        "rotateInUpLeft",
+        "rotateInUpRight",
+        "rollIn",
+        "zoomIn",
+        "zoomInDown",
+        "zoomInLeft",
+        "zoomInRight",
+        "zoomInUp",
+        "slideInDown",
+        "slideInLeft",
+        "slideInRight",
+        "slideInUp"
+      ],
+      leaveAnimations: [
+        "bounceOut",
+        "bounceOutDown",
+        "bounceOutUp",
+        "bounceOutLeft",
+        "bounceOutRight",
+        "fadeOut",
+        "fadeOutDown",
+        "fadeOutDownBig",
+        "fadeOutLeft",
+        "fadeOutLeftBig",
+        "fadeOutRight",
+        "fadeOutRightBig",
+        "fadeOutUp",
+        "fadeOutUpBig",
+        "flipOutX",
+        "flipOutY",
+        "rotateOut",
+        "rotateOutDownLeft",
+        "rotateOutDownRight",
+        "rotateOutUpLeft",
+        "rotateOutUpRight",
+        "rollOut",
+        "zoomOut",
+        "zoomOutDown",
+        "zoomOutLeft",
+        "zoomOutRight",
+        "zoomOutUp",
+        "slideOutDown",
+        "slideOutLeft",
+        "slideOutRight",
+        "slideOutUp"
+      ]
+    };
   },
   computed: {
     screenW: function() {
@@ -21,6 +93,9 @@ export default {
       return H - 50;
     }
   },
+  mounted() {
+    this.shadow = this.$el.querySelector(".shadow");
+  }, // mounted
   watch: {
     src: function(val) {
       // get current image
@@ -29,7 +104,10 @@ export default {
       // load new image
       let image = new Image();
       image.src = val;
-      image.classList.add("animated", "fadeIn");
+      let enterAnim = this.enterAnimations[
+        Math.floor(Math.random() * Math.floor(this.enterAnimations.length))
+      ];
+      image.classList.add("animated", "slow", enterAnim); // add random enter animation
 
       // when image is finished loading then...
       image.decode().then(() => {
@@ -37,9 +115,11 @@ export default {
         let wP = Math.ceil((image.naturalWidth / this.screenW) * 100);
         let hP = Math.ceil((image.naturalHeight / this.screenH) * 100);
 
+        /*
         console.info(`Screen W: ${this.screenW}, ScreenH: ${this.screenH}`);
         console.info(`wP: ${wP}, hP: ${hP}`);
         console.info(`W: ${image.naturalWidth}, H: ${image.naturalHeight}`);
+        */
 
         // determine height width ratio in comparison to the screen's
         if (
@@ -90,12 +170,13 @@ export default {
           margin = Math.abs(this.screenH - image.height) / 2;
 
         // remove the current image and...
-        if (current) current.classList.add("fadeOutUpBig", "slow");
+        let leaveAnim = this.leaveAnimations[
+          Math.floor(Math.random() * Math.floor(this.leaveAnimations.length))
+        ];
+        if (current) current.classList.add(leaveAnim); // add random leave animation
         setTimeout(() => {
           if (current) current.remove();
           image.style.marginTop = `${margin}px`;
-
-          // add the new image
           this.$el.prepend(image);
         }, 2000); // setTimeout
       });
@@ -107,10 +188,10 @@ export default {
 <style lang="stylus" scoped>
 @import '~animate.css/animate.css';
 .shadow
-  position absolute
+  postion absolute
+  top 0
+  left 0
   width 100%
   height 100%
   box-shadow inset 0px 0px 20px 30px rgba(0,0,0,1.0)
-  top 0
-  left 0
 </style>

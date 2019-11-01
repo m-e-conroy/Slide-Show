@@ -1,6 +1,8 @@
 <template>
-  <div id="show" @click="onOff()">
-    <img-swap :src="image"></img-swap>
+  <div id="window">
+    <div id="show" @click="onOff()">
+      <img-swap :src="image"></img-swap>
+    </div>
   </div>
 </template>
 
@@ -19,11 +21,15 @@ export default {
     };
   },
   async mounted() {
-    let W = (window.innerWidth || document.body.clientWidth) - 50;
-    let H = (window.innerHeight || document.body.clientHeight) - 50;
+    let show = document.querySelector("#show");
+    let W = window.innerWidth || document.body.clientWidth;
+    let H = window.innerHeight || document.body.clientHeight;
 
     this.$el.style.height = `${H}px`;
     this.$el.style.width = `${W}px`;
+    show.style.height = `${H -50}px`;
+    show.style.width = `${W -50}px`;
+
     await Images.getDB();
   },
   components: {
@@ -41,7 +47,7 @@ export default {
           this.image = `assets/img/${Images.next()}`;
         this.presentationInterval = setInterval(() => {
           this.image = `assets/img/${Images.next()}`;
-        }, 10000);
+        }, 12000);
       }
     }
   } // methods
@@ -54,17 +60,36 @@ export default {
   background: transparent; /* Optional: just make scrollbar invisible */
 }
 
+#window {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+
+  background: linear-gradient(270deg, #485fbf, #2b906d, #e3613a);
+  background-size: 600% 600%;
+
+  -webkit-animation: AnimationName 45s ease infinite;
+  -moz-animation: AnimationName 45s ease infinite;
+  animation: AnimationName 45s ease infinite;
+
+  @keyframes AnimationName {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+  }
+}
+
 #show {
   position: absolute;
   top: 25px;
   left: 25px;
-  /* border: 2px solid #fff; */
-  overflow: hidden;
 }
 
-#show img {
+#show img, #show div.shadow {
   display: block;
   margin-left: auto;
   margin-right: auto;
+  box-shadow: -15px 15px 30px -4px rgba(0,0,0,0.75);
 }
 </style>
